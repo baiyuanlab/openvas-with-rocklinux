@@ -1,0 +1,38 @@
+#! /bin/bash
+
+##關閉SELINUX、啟用Rocky-PowerTools
+sudo sed -i s/^SELINUX=.*$/SELINUX=disabled/ /etc/selinux/config
+sudo sed -i s/^enabled=.*$/enabled=1/ /etc/yum.repos.d/Rocky-PowerTools.repo
+
+##重新開機
+sudo reboot
+
+##更新
+sudo dnf check-update -y
+
+##安裝更新
+sudo dnf update -y
+
+##安裝 wget、nano
+sudo dnf install wget nano -y
+
+##安裝epel-release
+sudo dnf install epel-release -y
+
+##安裝Atomic Yum
+sudo wget -q -O - https://updates.atomicorp.com/installers/atomic | sudo sh
+
+##更新 yum update
+sudo yum update -y
+
+##安裝 gvm
+sudo yum install gvm -y
+
+##設定防火牆規則
+sudo firewall-cmd --permanent --zone=public --add-port=443/tcp
+sudo firewall-cmd --reload
+sudo firewall-cmd --list-ports
+
+##設定 gvm，第一次會更新弱點資料庫(例如cve、nvd)，會比較久
+##然後再設定admin管理員帳號跟密碼@!kb766Td5Mx5d2QsuJp
+sudo gvm-setup
